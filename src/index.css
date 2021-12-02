@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.mainMenu {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 50px;
+}
+
+.menuLink {
+  display: inline-block;
+  background: gray;
+  color: #fff;
+  border: none;
+  margin: auto;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 30px;
+  font-family: inherit;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.smallMenuLink {
+  display: inline-block;
+  background: gray;
+  color: #fff;
+  border: none;
+  padding: 1%;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.newMenu {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 10px;
+}
+
+.joinMenu {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 10px;
+}
+
+.gameHeader {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 30px;
+  padding-top: 20px;
+}
+
+.gameTimer {
+  width: 300px;
+  word-wrap: break-word;
+}
+
+.winnerString {
+  word-wrap: break-word;
+}
+
+.scoreBoard {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 10px;
+}
+
+.playerScore {
+  border-style: solid;
+  border-radius: 5px;
+  padding: 0px 5px;
+}
+
+.playerName {
+  border-style: solid;
+  border-radius: 5px;
+  padding: 0px 5px;
+}
+
+.gameBoard {
+  display: grid;
+  grid-template-columns: max-content max-content max-content max-content max-content;
+  grid-gap: 10px;
+  padding-top: 50px;
+}
+
+.container {
+  max-width: 500px;
+  margin: 30px auto;
+  min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 30px;
+  border-radius: 5px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 1%;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+}
