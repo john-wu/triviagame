@@ -7,7 +7,14 @@ const GameBoard = ({ game_data, click_ball }) => {
         const ball_id = e.target.id;
         click_ball(ball_id);
     };
-
+    
+    const game_board = []
+    Object.entries(game_data.board_state).forEach(([key, value]) => {
+        game_board.push(
+            <Button width="80px" height="80px" key={key} id={key} onClick={on_click_ball} />
+        )
+    });
+    
     return (
         <>
             <p>Game ID: {game_data.id}</p>
@@ -16,9 +23,7 @@ const GameBoard = ({ game_data, click_ball }) => {
                 <GameTimer game_data={game_data} />
             </div>
             <div className="gameBoard" >
-                {game_data.balls && [...Array(game_data.balls)].map((item , index) => (
-                    <Button color={game_data.state[`${index}`] && game_data.state[`${index}`].player_colour} borderRadius="50%" width="80px" height="80px" key={index} id={index} onClick={on_click_ball} />
-                ))}
+                {game_board}
             </div>
         </>
     )

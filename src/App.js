@@ -10,7 +10,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 
 function App() {
   const navigate = useNavigate();
-  const [socketUrl, setSocketUrl] = useState("ws://www.jozwu.com:8080");
+  const [socketUrl, setSocketUrl] = useState("ws://localhost:8080");
   const [messageHistory, setMessageHistory] = useState([]);
   const [interface_data, set_interface_data] = useState({});
   const [client_data, set_client_data] = useState({});
@@ -91,15 +91,15 @@ function App() {
   }, [lastMessage, setMessageHistory]);
 
   // on new game button press
-  const new_game = async (num_players, time_limit, player_name) => {
+  const new_game = async (num_players, num_questions, player_name) => {
     const client_id = client_data.client_id;
 
     if (!num_players) {
       set_interface_data(interface_data => ({...interface_data, error_message: "Please enter Number of Players"}));
       return;
     }
-    else if (!time_limit) {
-      set_interface_data(interface_data => ({...interface_data, error_message: "Please enter a Time Limit"}));
+    else if (!num_questions) {
+      set_interface_data(interface_data => ({...interface_data, error_message: "Please enter a Number of Questions"}));
       return;
     }
 
@@ -110,7 +110,7 @@ function App() {
       "method": "create",
       "client_id": client_id,
       "num_players": num_players,
-      "time_limit": time_limit
+      "num_questions": num_questions
     };
 
     const response = await sendMessage(JSON.stringify(payload));

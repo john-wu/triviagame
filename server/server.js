@@ -2,7 +2,12 @@ const path = require("path");
 const http = require("http");
 const { v4: uuidv4 } = require('uuid');
 const ws_server = require("websocket").server;
+const { MongoClient } = require("mongodb");
 const { client } = require("websocket");
+
+// mongodb
+const mongo_uri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000";
+const mongo_client = new MongoClient(mongo_uri);
 
 // create server and listen for requests
 const http_server = http.createServer();
@@ -14,8 +19,11 @@ const games = {};
 const player_colours = {
     "0": "red",
     "1": "green",
-    "2": "yellow"
+    "2": "yellow",
+    "3": "blue",
+    "4": "orange"
 };
+
 
 const websocket_server = new ws_server({
     "httpServer": http_server
@@ -36,29 +44,31 @@ websocket_server.on("request", request => {
         
         // user wants to create new game
         if (response.method === "create") {
-            const client_id = response.client_id;
-            const game_id = uuidv4();
-            const num_players = response.num_players;
-            const time_limit = response.time_limit;
-            games[game_id] = {
-                "id": game_id,
-                "balls": 20,
-                "num_players": parseInt(num_players),
-                "time_remaining": parseInt(time_limit),
-                "clients": {},
-                "state": {},
-                "scores": {},
-                "winners": [],
-                "status": "pending"
-            };
+            (async () => {
+                const client_id = response.client_id;
+                const game_id = uuidv4();
+                const num_players = response.num_players;
+                const num_questions = response.num_questions;
+                const initial_state = await load_intial_state(num_questions);
 
-            const payload = {
-                "method": "create",
-                "game": games[game_id]
-            };
+                games[game_id] = {
+                    "id": game_id,
+                    "num_players": parseInt(num_players),
+                    "clients": {},
+                    "board_state": initial_state,
+                    "scores": {},
+                    "winners": [],
+                    "status": "pending"
+                };
 
-            const con = clients[client_id].connection;
-            con.send(JSON.stringify(payload));
+                const payload = {
+                    "method": "create",
+                    "game": games[game_id]
+                };
+
+                const con = clients[client_id].connection;
+                con.send(JSON.stringify(payload));
+            })();
         };
 
         // user wants to join existing game
@@ -208,4 +218,28 @@ function start_timer(game_id) {
         setTimeout(step, Math.max(0, interval - dt));
     }
     setTimeout(step, interval);
+}
+
+async function load_intial_state(num_questions) {
+    const initial_state = {}
+
+    try {
+        await mongo_client.connect();
+
+        const database = mongo_client.db("trivia_game");
+        const collection = database.collection("questions");
+
+        
+        const aggCursor = await collection.aggregate([{ $sample: { size: num_questions } }]);
+        const questions = await aggCursor.toArray();
+        questions.forEach(function (question, i) {
+            initial_state[i] = question;
+            initial_state[i].answered = false;
+        });
+
+    } finally {
+        await mongo_client.close();
+    }
+
+    return initial_state;
 }

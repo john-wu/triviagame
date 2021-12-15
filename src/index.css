@@ -21,6 +21,8 @@ body {
   background: gray;
   color: #fff;
   border: none;
+  padding-left: 15px;
+  padding-right: 15px;
   margin: auto;
   cursor: pointer;
   text-decoration: none;
